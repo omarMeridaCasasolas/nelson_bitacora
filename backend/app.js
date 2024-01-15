@@ -105,7 +105,6 @@ app.get('/api/vehiculo',verificarToken,(req, res) => {
   connection.query('SELECT id_vehiculo, detalle_vehiculo, placa_vehiculo, tipo_vehiculo, km_vehiculo, estado_vehiculo, nombre_unidad, id_unidad FROM vehiculo INNER JOIN unidad USING(id_unidad)', (error, results, fields) => {
     if (error) {
       console.log(error);
-      // throw error;
       res.json({ error });
       throw error;
     }else{
@@ -120,9 +119,8 @@ app.post('/api/vehiculo',verificarToken, (req, res)=> {
     const query = 'INSERT INTO vehiculo(placa_vehiculo,tipo_vehiculo,detalle_vehiculo,estado_vehiculo,km_vehiculo,id_unidad) VALUES (?,?,?,?,?,?)';
     connection.query(query, [valor.placa_vehiculo,valor.tipo_vehiculo,valor.detalle_vehiculo,valor.estado_vehiculo,valor.km_vehiculo,valor.id_unidad], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         valor.id_vehiculo = results.insertId;
         // console.log(chofer);
@@ -142,9 +140,8 @@ app.delete('/api/vehiculo/:id', verificarToken, (req, res) => {
     const query = 'DELETE FROM vehiculo WHERE id_vehiculo = ?';
     connection.query(query, [idVehiculo], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         io.emit('eliminarVehiculo', idVehiculo);
         res.json({resultado:results.affectedRows});
@@ -162,8 +159,8 @@ app.put('/api/vehiculo', verificarToken, (req, res)=> {
     const query = 'UPDATE vehiculo SET placa_vehiculo = ? ,tipo_vehiculo = ?, detalle_vehiculo = ?,estado_vehiculo = ?, km_vehiculo = ?, id_unidad = ? WHERE id_vehiculo = ?';
     connection.query(query, [vehiculo.placa_vehiculo,vehiculo.tipo_vehiculo,vehiculo.detalle_vehiculo,vehiculo.estado_vehiculo,vehiculo.km_vehiculo,vehiculo.id_unidad,vehiculo.id_vehiculo], (error, results) => {
       if (error) {
+        console.log(error);
         res.status(500).json({error});
-        throw error;
       }else{
         // console.log(vehiculo);
         io.emit('editarVehiculo', vehiculo);
@@ -183,9 +180,8 @@ app.get('/api/vehiculosDisponiblesUnidad/:id', verificarToken,(req, res) => {
     const query = 'SELECT id_vehiculo, CONCAT(detalle_vehiculo," - ",tipo_vehiculo) AS nombre FROM vehiculo WHERE id_unidad = ?';
     connection.query(query, [idUnidad], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         // io.emit('eliminarVehiculo', idVehiculo);
         // res.json({resultado:results.affectedRows});
@@ -205,9 +201,8 @@ app.get('/api/vehiculosAsignadosChofer/:id', verificarToken, (req, res) => {
     const query = 'SELECT id_vehiculo FROM chofer_vehiculo WHERE id_chofer = ?';
     connection.query(query, [idChofer], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         console.log(results);
         res.json(results);
@@ -225,9 +220,8 @@ app.get('/api/vehiculosDisponiblesPorChofer/:id', verificarToken, (req, res) => 
     const query = 'SELECT id_vehiculo, CONCAT(detalle_vehiculo," - ",tipo_vehiculo) AS nombre FROM chofer_vehiculo INNER JOIN vehiculo USING(id_vehiculo) WHERE id_chofer = ? AND estado_vehiculo = 1';
     connection.query(query, [idChofer], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         console.log(results);
         res.json(results);
@@ -244,9 +238,8 @@ app.get('/api/vehiculosDisponibles', verificarToken, (req, res) => {
     const query = 'SELECT id_vehiculo, CONCAT(detalle_vehiculo," - ",tipo_vehiculo) AS nombre, false AS checked FROM vehiculo';
     connection.query(query, [], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         console.log(results);
         res.json(results);
@@ -265,7 +258,6 @@ app.post('/api/asignarVehiculoChofer', verificarToken, (req, res)=> {
     connection.query('CALL asignarVehiculoChofer(?,?)',[valor.idChofer, valor.listaVehiculoAsignados.join(',')], (error, results, fields) => {
       if (error) {
         console.log(error);
-        // throw error;
         res.json({ error });
       }else{
         res.json(results[0]);
@@ -282,7 +274,6 @@ app.get('/api/unidadDisponibles',verificarToken,(req, res) => {
   connection.query('SELECT id_unidad, nombre_unidad FROM unidad WHERE estado_unidad = 1', (error, results, fields) => {
     if (error) {
       console.log(error);
-      // throw error;
       res.json({ error });
     }else{
       res.json(results);
@@ -296,9 +287,8 @@ app.get('/api/unidadesAsignadosAdministrador/:id', verificarToken, (req, res) =>
     const query = 'SELECT id_unidad, nombre_unidad FROM administrador_unidad INNER JOIN unidad USING(id_unidad) WHERE id_administrador = ? AND estado_unidad = 1';
     connection.query(query, [idAdministrador], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         console.log(results);
         res.json(results);
@@ -313,9 +303,8 @@ app.get('/api/unidadesAsignadosAdministrador/:id', verificarToken, (req, res) =>
 app.get('/api/unidad',verificarToken,(req, res) => {
   connection.query('SELECT * FROM unidad', (error, results, fields) => {
     if (error) {
+      console.log(error);
       res.json({ error });
-      throw error;
-      
     }else{
       res.json(results);
     }
@@ -328,9 +317,8 @@ app.post('/api/unidad', verificarToken, (req, res)=> {
     const query = 'INSERT INTO unidad(nombre_unidad,estado_unidad,descripcion_unidad) VALUES (?,?,?)';
     connection.query(query, [valor.nombre_unidad,valor.estado_unidad,valor.descripcion_unidad], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         valor.id_unidad = results.insertId;
         io.emit('agregarUnidad', valor);
@@ -349,8 +337,8 @@ app.delete('/api/unidad/:id', verificarToken,(req, res) => {
     const query = 'DELETE FROM unidad WHERE id_unidad = ?';
     connection.query(query, [idUnidad], (error, results) => {
       if (error) {
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         io.emit('eliminarUnidad', idUnidad);
         res.json({resultado:results.affectedRows});
@@ -368,8 +356,8 @@ app.put('/api/unidad', verificarToken,(req, res)=> {
     const query = 'UPDATE unidad SET nombre_unidad = ?, descripcion_unidad = ?, estado_unidad = ? WHERE id_unidad = ?';
     connection.query(query, [unidad.nombre_unidad,unidad.descripcion_unidad,unidad.estado_unidad,unidad.id_unidad], (error, results) => {
       if (error) {
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         io.emit('editarUnidad', unidad);
 		    res.json({resultado: results.affectedRows}); // Envía los resultados como respueverificarTokensta  
@@ -387,7 +375,6 @@ app.post('/api/asignarUnidadAdministrador', verificarToken, (req, res)=> {
     connection.query('CALL asignarUnidadAdministrador(?,?)',[valor.idAdministrador, valor.listaUnidadesAsignadas.join(',')], (error, results, fields) => {
       if (error) {
         console.log(error);
-        // throw error;
         res.json({ error });
       }else{
         res.json(results[0]);
@@ -405,7 +392,6 @@ app.get('/api/choferDisponibles',verificarToken, (req, res) => {
     if (error) {
       console.log(error);
       res.json({ error });
-      throw error;
     }else{
       res.json(results);
     }
@@ -415,8 +401,8 @@ app.get('/api/choferDisponibles',verificarToken, (req, res) => {
 app.get('/api/chofer', verificarToken,(req, res) => {
   connection.query('SELECT * FROM chofer', (error, results, fields) => {
     if (error) {
+      console.log(error);
       res.json({ error });
-      throw error;
     }else{
       res.json(results);
     }
@@ -429,7 +415,8 @@ app.post('/api/chofer', verificarToken, (req, res)=> {
     const query = 'INSERT INTO chofer(carnet_chofer,nombre_chofer,celular_chofer,estado_chofer,login_chofer,pass_chofer) VALUES (?,?,?,?,?,?)';
     connection.query(query, [chofer.carnet_chofer,chofer.nombre_chofer,chofer.celular_chofer,chofer.estado_chofer,chofer.login_chofer,chofer.pass_chofer], (error, results) => {
       if (error) {
-        throw error;
+        console.log(error);
+        res.json({ error });
       }else{
         chofer.id_chofer = results.insertId;
         io.emit('agregarChofer', chofer);
@@ -448,7 +435,8 @@ app.delete('/api/chofer/:id', verificarToken, (req, res) => {
     const query = 'DELETE FROM chofer WHERE id_chofer = ?';
     connection.query(query, [idChofer], (error, results) => {
       if (error) {
-        throw error;
+        console.log(error);
+        res.json({ error });
       }else{
         io.emit('eliminarChofer', idChofer);
         res.json({resultado:results.affectedRows});
@@ -466,8 +454,8 @@ app.put('/api/chofer', verificarToken, (req, res)=> {
     const query = 'UPDATE chofer SET carnet_chofer = ?,nombre_chofer = ?,celular_chofer = ?,estado_chofer = ?,login_chofer = ?,pass_chofer = ? WHERE id_chofer = ?';
     connection.query(query, [chofer.carnet_chofer,chofer.nombre_chofer,chofer.celular_chofer,chofer.estado_chofer,chofer.login_chofer,chofer.pass_chofer,chofer.id_chofer], (error, results) => {
       if (error) {
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         io.emit('editarChofer', chofer);
 		    res.json({resultado: results.affectedRows}); // Envía los resultados como respueverificarTokensta  
@@ -495,7 +483,6 @@ app.get('/api/administrador', verificarToken,(req, res) => {
 app.post('/api/administrador', verificarToken, (req, res)=> {
   try {
     const administrador = req.body;
-    // console.log(administrador);
     const query = 'INSERT INTO administrador(nombre_administrador,celular_administrador,estado_administrador,login_administrador,pass_administrador) VALUES (?,?,?,?,?)';
     connection.query(query, [administrador.nombre_administrador,administrador.celular_administrador,administrador.estado_administrador,administrador.login_administrador,administrador.pass_administrador], (error, results) => {
       if (error) {
@@ -519,6 +506,7 @@ app.delete('/api/administrador/:id', verificarToken, (req, res) => {
     const query = 'DELETE FROM administrador WHERE id_administrador = ?';
     connection.query(query, [idAdministrador], (error, results) => {
       if (error) {
+        console.log(error);
         res.json({ error });
       }else{
         console.log('idAdministrador');
@@ -539,7 +527,6 @@ app.put('/api/administrador', verificarToken, (req, res)=> {
     connection.query(query, [administrador.nombre_administrador,administrador.celular_administrador,administrador.estado_administrador,administrador.login_administrador,administrador.pass_administrador,administrador.id_administrador], (error, results) => {
       if (error) {
         res.json({ error });
-        // throw error;
       }else{
         io.emit('editarAdministrador', administrador);
 		    res.json({resultado: results.affectedRows}); // Envía los resultados como respueverificarTokensta  
@@ -556,8 +543,8 @@ app.put('/api/administrador', verificarToken, (req, res)=> {
 app.get('/api/usuario', verificarToken,(req, res) => {
   connection.query('SELECT id_usuario,carnet_usuario,nombre_usuario,celular_usuario,estado_usuario,login_usuario,pass_usuario,id_unidad,nombre_unidad FROM usuario INNER JOIN unidad USING(id_unidad)', (error, results, fields) => {
     if (error) {
+      console.log(error);
       res.json({ error });
-      throw error;
     }else{
       res.json(results);
     }
@@ -567,8 +554,8 @@ app.get('/api/usuario', verificarToken,(req, res) => {
 app.get('/api/usuariosDisponibles', verificarToken,(req, res) => {
   connection.query('SELECT id_usuario,id_unidad , nombre_usuario FROM usuario WHERE estado_usuario = 1', (error, results, fields) => {
     if (error) {
+      console.log(error);
       res.json({ error });
-      throw error;
     }else{
       res.json(results);
     }
@@ -581,8 +568,8 @@ app.post('/api/usuario', verificarToken,(req, res) => {
     const query = 'INSERT INTO usuario(carnet_usuario,nombre_usuario,celular_usuario,estado_usuario,login_usuario,pass_usuario,id_unidad) VALUES (?,?,?,?,?,?,?)';
     connection.query(query, [usuario.carnet_usuario,usuario.nombre_usuario,usuario.celular_usuario,usuario.estado_usuario,usuario.login_usuario,usuario.pass_usuario,usuario.id_unidad], (error, results) => {
       if (error) {
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         io.emit('agregarUsuario', usuario);
 		    res.json({resultado: results.affectedRows}); // Envía los resultados como respueverificarTokensta  
@@ -597,12 +584,11 @@ app.post('/api/usuario', verificarToken,(req, res) => {
 app.delete('/api/usuario/:id', verificarToken,(req, res) => {
   try {
     let idUsuario = req.params.id;
-    console.log(idUsuario);
     const query = 'DELETE FROM usuario WHERE id_usuario = ?';
     connection.query(query, [idUsuario], (error, results) => {
       if (error) {
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         io.emit('eliminarUsuario', idUsuario);
         res.json({resultado:results.affectedRows});
@@ -621,8 +607,8 @@ app.put('/api/usuario',verificarToken, (req, res)=> {
     const query = 'UPDATE usuario SET carnet_usuario = ?,nombre_usuario = ?,celular_usuario = ?,estado_usuario = ?,login_usuario = ?,pass_usuario = ?, id_unidad = ? WHERE id_usuario = ?';
     connection.query(query, [usuario.carnet_usuario,usuario.nombre_usuario,usuario.celular_usuario,usuario.estado_usuario,usuario.login_usuario,usuario.pass_usuario,usuario.id_unidad,usuario.id_usuario], (error, results) => {
       if (error) {
+        console.log(error);
         res.json({ error });
-        throw error;
       }else{
         io.emit('editarUsuario', usuario);
 		    res.json({resultado: results.affectedRows}); // Envía los resultados como respueverificarTokensta  
@@ -696,7 +682,8 @@ app.post('/api/bitacora',verificarToken, (req, res)=> {
     const query = 'SELECT * FROM bitacora WHERE id_vehiculo = ? AND fecha_bitacora BETWEEN ? AND ?';
     connection.query(query, [valor.id_vehiculo ,formatoMysql(fechaInicio), formatoMysql(fechaFinal)], (error, results) => {
       if (error) {
-        throw error;
+        console.log(error);
+        res.json({ error });
       }else{
         let semana = ordenarPordiasFecha(fechaInicio);
         res.json(agruparPorDia(semana,results)); // Envía los resultados como respuesta  
@@ -711,7 +698,8 @@ app.post('/api/bitacora',verificarToken, (req, res)=> {
 app.get('/getBitacora', (req, res) => {
   connection.query('SELECT * FROM bitacora', (error, results, fields) => {
     if (error) {
-      throw error;
+      console.log(error);
+      res.json({ error });
     }else{
       res.json({ bitacoras: results });
     }
@@ -724,7 +712,8 @@ app.delete('/api/bitacora/:id', (req, res) => {
     const query = 'DELETE FROM bitacora WHERE id_bitacora = ?';
     connection.query(query, [idBitacora], (error, results) => {
       if (error) {
-        throw error;
+        console.log(error);
+        res.json({ error });
       }else{
         io.emit('eliminarReserva', idBitacora);
         res.json(results.affectedRows);
@@ -743,7 +732,8 @@ app.post('/api/deleteBitacora', (req, res) => {
     const query = 'DELETE FROM bitacora WHERE id_bitacora = ?';
     connection.query(query, [valor.id_bitacora], (error, results) => {
       if (error) {
-        throw error;
+        console.log(error);
+        res.json({ error });
       }else{
         io.emit('eliminarReserva', valor);
         res.json(results.affectedRows);
@@ -767,7 +757,6 @@ app.put('/api/bitacora/:id', (req, res) => {
     kilometraje_inicio = ?, kilometraje_final = ?, estado_evaluacion = ? , motivo_evaluacion = ?, id_administrador = ?  WHERE id_bitacora = ?`;
     connection.query(query, [valor.horario,valor.destino,valor.nroVale,valor.kmInicial,valor.kmFinal,valor.estado_evaluacion,valor.motivo_evaluacion, valor.id_administrador, idBitacora], (error, results) => {
       if (error) {
-        // throw error;
         console.log(error);
         res.json({ error });
       }else{
@@ -791,9 +780,8 @@ app.post('/api/historialVehiculo', verificarToken, (req, res) => {
     "WHERE estado_bitacora = 'Reservado' AND id_vehiculo = ? AND fecha_bitacora BETWEEN ? AND ?";
     connection.query(query, [data.idVehiculo, data.fechaInicio, data.fechaFinal], (error, results) => {
       if (error) {
-        // throw error;
+        console.log(error);
         res.json({ error });
-        // throw error;
       }else{
         console.log(results);
         res.json(results);

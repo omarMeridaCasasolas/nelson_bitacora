@@ -1,10 +1,9 @@
-<div *ngIf="cargo == 'chofer' || cargo == 'administrador'; else componenteB">
+<div *ngIf="cargo == 'administrador'; else componenteB">
 	<app-navchofer></app-navchofer>
 </div>
 <ng-template #componenteB>
 	<app-nav-usuario></app-nav-usuario>
 </ng-template>
-
 <br>
 <br>
 <div class="container">
@@ -59,5 +58,4 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-
 </div>

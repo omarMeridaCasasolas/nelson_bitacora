@@ -72,7 +72,6 @@ export class UnidadComponent {
       this.http.get<Unidad[]>(URL+'api/unidad', {headers})
       .pipe(
         tap(response  => {
-          console.log(response);
           this.dataSource = new MatTableDataSource(response);
         }),
         finalize(() => {
@@ -95,24 +94,16 @@ export class UnidadComponent {
   }
 
   eliminarUnidad(element: any){
-    // console.log(row);
     const dialogRef = this.dialog.open(ModalEliminarUnidadComponent, {
       width: '450px',
       data:  element 
     });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Diálogo cerrado con resultado:', result);
-    });
   }
 
   editarUnidad(element: any){
-    // console.log(row);
     const dialogRef = this.dialog.open(ModalEditarUnidadComponent, {
       width: '450px',
       data:  element 
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('Diálogo cerrado con resultado:', result);
     });
   }
 
@@ -127,7 +118,6 @@ export class UnidadComponent {
 
   getUserCargo(): string | null {
       const decodedToken = this.getDecodedToken();
-      console.log(decodedToken);
       return decodedToken ? decodedToken.cargo : null;
   }
 

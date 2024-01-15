@@ -111,7 +111,6 @@ export class AdministradorComponent implements OnInit{
       this.http.get<Unidad[]>(URL+'api/unidadDisponibles',{ headers })
         .pipe(
         tap(response  => {
-          console.log(response);
           this.opcionesUnidad = response;
         }),
         finalize(() => {

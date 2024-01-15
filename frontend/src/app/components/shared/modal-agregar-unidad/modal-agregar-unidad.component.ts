@@ -28,13 +28,12 @@ export class ModalAgregarUnidadComponent {
   }
 
   agregarUnidad(){
-    // console.log('aquyieie');
     if (this.myForm.valid) {
       const formData = this.myForm.value;
       const token = localStorage.getItem('token');
       if (token) {
         const headers = new HttpHeaders().set('Authorization', token);
-        this.http.post<any>(URL+'api/unidad',formData)
+        this.http.post<any>(URL+'api/unidad',formData,{headers})
         .pipe(
           tap(response  => {
             this.dialogRef.close();

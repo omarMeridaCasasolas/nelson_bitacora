@@ -285,10 +285,14 @@ export class BitacoraComponent implements OnInit {
     }
 
     obtenerFilaColumna(fila: number, columna: number) {
+        if(this.cargo == 'administrador'){
+            this.showAlert("Solo puede registrar una reserva un usuario o chofer");
+            return;
+        }
         let time:string = this.cuerpoTable[fila].hora;
         let datos = this.cabezeraTable[columna];
         this.fechaActual = datos['dia'];
-        console.log(datos['dia']);
+        // console.log(datos['dia']);
 
         this.horariosDisponibles = [];
         let horaInicio = convertirCadenaTiempoAFecha(time);
